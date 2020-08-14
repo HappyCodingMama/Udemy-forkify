@@ -9,7 +9,7 @@ import * as likesView from './views/likesView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 const state = {};
-window.state = state;
+
 
 const controlSearch = async () => {
   const query = searchView.getInput();
@@ -51,7 +51,6 @@ elements.searchResPages.addEventListener('click', e => {
 
 const controlRecipe = async () => {
   const id = window.location.hash.replace('#', '');
-  console.log(id);
 
   if (id) {
     recipeView.clearRecipe();
@@ -109,9 +108,6 @@ elements.shopping.addEventListener('click', e => {
 });
 
 //Like controller
-state.likes = new Likes();
-
-
 const controlLike = () => {
   if (!state.likes) state.likes = new Likes();
   const currentID = state.recipe.id;
@@ -138,6 +134,15 @@ const controlLike = () => {
   likesView.toggleLikeMenu(state.likes.getNumLikes());
 };
 
+window.addEventListener('load', () => {
+  state.likes = new Likes();
+
+  state.likes.readStorage();
+
+  likesView.toggleLikeMenu(state.likes.getNumLikes());
+
+  state.likes.likes.forEach(like => likesView.renderLike(like));
+});
 
 elements.recipe.addEventListener('click', e => {
   if (e.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -156,8 +161,6 @@ elements.recipe.addEventListener('click', e => {
     controlLike();
   }
 });
-
-window.l = new List();
 
 
 
